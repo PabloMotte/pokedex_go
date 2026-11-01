@@ -42,6 +42,7 @@ func startRepl(cfg *config) {
 			clean_input := cleanInput(input_str)
 			if len(clean_input) > 0 {
 				if len(clean_input) > 1 {
+					// Hold parameters from the config structure
 					cfg.parms = clean_input[1:]
 				}
 				cmd, ok := cfg.Commands[clean_input[0]]
