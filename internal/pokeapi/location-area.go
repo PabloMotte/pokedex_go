@@ -4,6 +4,7 @@ import "encoding/json"
 
 
 // https://pokeapi.co/docs/v2#location-areas
+// e.g. https://pokeapi.co/api/v2/location-area
 type LocationAreas struct {
 	Count    int    `json:"count"`
 	NextUrl     *string `json:"next"`
@@ -15,6 +16,7 @@ type LocationAreas struct {
 }
 
 // https://pokeapi.co/docs/v2#location-area
+// e.g. https://pokeapi.co/api/v2/location-area/pastoria-city-area
 type LocationArea struct {
 	ID                   int    `json:"id"`
 	Name                 string `json:"name"`

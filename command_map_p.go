@@ -12,7 +12,7 @@ func commandMapP(cfg *config) error {
 	}
 	s := *cfg.PreviousUrl
 	if !strings.HasPrefix(s, "http") {
-		s = cfg.BaseUrl + s
+		s = *cfg.BaseUrl + s
 	}
 	err := print_locations(s, cfg)
 	if err != nil {

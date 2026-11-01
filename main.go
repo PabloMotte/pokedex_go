@@ -6,14 +6,16 @@ import (
 )
 
 func main() {
+	s_base_url := "https://pokeapi.co/api/v2/"
 	s_location_area := "location-area"
 	pokeClient := pokeapi.NewClient(5*time.Second, time.Minute*5)
 	cfg := &config{
 		Commands: GetCommands(),
-		BaseUrl: "https://pokeapi.co/api/v2/",
+		BaseUrl: &s_base_url,
 		NextUrl: &s_location_area,
 		PreviousUrl: nil,
 		apiClient: pokeClient,
+		pokedex: map[string]*pokeapi.Pokemon{},
 	}
 	startRepl(cfg)
 }

@@ -13,7 +13,7 @@ func commandMap(cfg *config) error {
 	}
 	s := *cfg.NextUrl
 	if !strings.HasPrefix(s, "http") {
-		s = cfg.BaseUrl + s
+		s = *cfg.BaseUrl + s
 	}
 	err := print_locations(s, cfg)
 	if err != nil {
@@ -23,9 +23,12 @@ func commandMap(cfg *config) error {
 }
 
 func print_locations(url string, cfg *config) error {
-	jsonBlob, err := cfg.apiClient.GetResponseById(&url)
+	jsonBlob, err := cfg.apiClient.GetResponseById(&url, "")
 	if err != nil {
 		return err
+	}
+	if len(jsonBlob) == 0 {
+		return nil
 	}
 	locations, err := pokeapi.GetLocationAreas(jsonBlob)
 	if err != nil {

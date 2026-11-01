@@ -4,12 +4,22 @@ import (
 	// "encoding/json"
 	"io"
 	"net/http"
+	"strings"
+	"fmt"
 )
 
 
-func (c *Client) GetResponseById(baseURL *string) (jsonBlob []byte, http_err error) {
+func (c *Client) GetResponseById(baseURL *string, id string) (jsonBlob []byte, http_err error) {
 	// Using "non-simple" HTTP GET method
 	fullURL := *baseURL
+	if len(id) > 0 {
+		if strings.HasSuffix(fullURL, "/") {
+			fullURL = fullURL + id
+		} else {
+			fullURL = fullURL + "/" + id
+		}
+	}
+	// fmt.Printf("reading %s\n", fullURL)
 
 	jsonBlob, ok := c.cache.Get(fullURL)
 	if ok {
@@ -28,6 +38,12 @@ func (c *Client) GetResponseById(baseURL *string) (jsonBlob []byte, http_err err
 		return []byte{}, err
 	}
 	defer res.Body.Close()
+	if res.StatusCode == 404 {
+		fmt.Printf("%s not found\n", fullURL)
+		return []byte{}, nil
+	} else if res.StatusCode > 299 {
+		return []byte{}, fmt.Errorf("HTTP failure (%d) for %s\n", fullURL)
+	}
 
 	jsonBlob, err = io.ReadAll(res.Body)
 	if err != nil {
