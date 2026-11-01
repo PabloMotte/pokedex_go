@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"time"
 	"github.com/pablomotte/pokedex_go/internal/pokeapi"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
@@ -22,9 +23,10 @@ func commandCatch(cfg *config) error {
 }
 
 func print_catch_pokemon(url string, cfg *config) error {
-	// use 99 for a "fixed" random number, 
+	// use int64(99) for a "fixed" random number (first is always 73 in my testing), 
 	// or current nanoseconds for complete pseudo-randomness
-	seed := int64(99) // time.Now().UnixNano() 
+	// seed := int64(99) // time.Now().UnixNano() 
+	seed := time.Now().UnixNano() 
 	if cfg.parms == nil || len(cfg.parms) < 1 {
 		fmt.Printf("%spokemon name or id# required%s\n", ColorRed, ColorNone)
 		return nil
@@ -58,6 +60,7 @@ func print_catch_pokemon(url string, cfg *config) error {
 	}
 	cfg.pokedex[pokemon.Name] = &pokemon
 	fmt.Printf("%s%s was caught! %s(%d vs. %d)%s\n", ColorBlue, poke_name(pokemon.Name), ColorYellow, check, pokemon.BaseExperience, ColorNone)
+	fmt.Printf("%sYou may now inspect %s with the inspect command.%s\n", ColorYellow, poke_name(pokemon.Name), ColorNone)
 	return nil
 }
 
