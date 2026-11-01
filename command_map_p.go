@@ -1,11 +1,11 @@
-package commands
+package main
 
 import (
 	"fmt"
 	"strings"
 )
 
-func commandMapP(cfg *Config) error {
+func commandMapP(cfg *config) error {
 	if cfg.PreviousUrl == nil {
 		fmt.Printf("you're on the first page\n")
 		return nil

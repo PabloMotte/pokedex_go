@@ -1,4 +1,4 @@
-package commands
+package main
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"github.com/pablomotte/pokedex_go/internal/pokeapi"
 )
 
-func commandMap(cfg *Config) error {
+func commandMap(cfg *config) error {
 	if cfg.NextUrl == nil {
 		fmt.Printf("you're on the last page\n")
 		return nil
@@ -22,8 +22,8 @@ func commandMap(cfg *Config) error {
 	return nil
 }
 
-func print_locations(url string, cfg *Config) error {
-	jsonBlob, err := pokeapi.GetResponseById(url, "", "")
+func print_locations(url string, cfg *config) error {
+	jsonBlob, err := cfg.apiClient.GetResponseById(&url)
 	if err != nil {
 		return err
 	}

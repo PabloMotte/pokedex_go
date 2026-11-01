@@ -7,9 +7,14 @@ import (
 )
 
 
-func GetResponseById(baseURL, id, apiKey string) (jsonBlob []byte, http_err error) {
+func (c *Client) GetResponseById(baseURL *string) (jsonBlob []byte, http_err error) {
 	// Using "non-simple" HTTP GET method
-	fullURL := baseURL + "/" + id
+	fullURL := *baseURL
+
+	jsonBlob, ok := c.cache.Get(fullURL)
+	if ok {
+		return jsonBlob, nil
+	}
 
     // create a new request
 	req, err := http.NewRequest("GET", fullURL, nil)
@@ -17,14 +22,8 @@ func GetResponseById(baseURL, id, apiKey string) (jsonBlob []byte, http_err erro
 		return []byte{}, err
 	}
 
-	if apiKey != "" {
-		// set request headers
-		req.Header.Set("X-API-Key", apiKey)
-	}
-
     // create a new client and make the request
-	client := &http.Client{}
-	res, err := client.Do(req)
+	res, err := c.httpClient.Do(req)
 	if err != nil {
 		return []byte{}, err
 	}
@@ -34,6 +33,7 @@ func GetResponseById(baseURL, id, apiKey string) (jsonBlob []byte, http_err erro
 	if err != nil {
 		return []byte{}, err
 	}
+	c.cache.Add(fullURL, jsonBlob)
 	return jsonBlob, nil
 }
 
